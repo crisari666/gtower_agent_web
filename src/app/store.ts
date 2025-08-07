@@ -1,9 +1,13 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit'
 import counterReducer from '../features/counter/counterSlice'
+import customerReducer from '../features/customer/customer-slice'
+import agentReducer from '../features/agent/agent-slice'
 
 export const store = configureStore({
   reducer: {
     counter: counterReducer,
+    customer: customerReducer,
+    agent: agentReducer,
   },
 })
 
