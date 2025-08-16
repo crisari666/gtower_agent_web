@@ -31,7 +31,7 @@ export class CustomersService {
   async getCustomerById(id: string): Promise<Customer | null> {
     try {
       const response = await this.api.get({ path: `/customers/${id}` })
-      return response.data || null
+      return response
     } catch (error) {
       console.error('Error fetching customer:', error)
       throw new Error('Failed to fetch customer')

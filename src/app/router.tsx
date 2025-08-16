@@ -6,6 +6,7 @@ import { Page2 } from '../pages/page2'
 import { Page3 } from '../pages/page3'
 import { CustomerView } from '../pages/customer'
 import { AgentView } from '../pages/agent'
+import ChatView from '../features/chats/components/chat-view.component'
 import { Nav } from '../components/Nav'
 
 export const APP_ROUTES = {
@@ -15,6 +16,7 @@ export const APP_ROUTES = {
   page3: '/page3',
   customer: '/customer',
   agent: '/agent',
+  chats: '/chats',
 } as const
 
 export type AppRouteKey = keyof typeof APP_ROUTES
@@ -58,6 +60,14 @@ export const router = createBrowserRouter([
       {
         path: 'agent',
         Component: AgentView,
+      },
+      {
+        path: 'chats',
+        Component: ChatView,
+      },
+      {
+        path: 'chats/:customerId',
+        Component: ChatView,
       },
     ],
   },

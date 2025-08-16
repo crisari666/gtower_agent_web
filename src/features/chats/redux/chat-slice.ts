@@ -1,9 +1,10 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { ChatState, ChatMessage } from '../types/chat.types'
+import { ChatState, ChatMessage, ChatConversation } from '../types/chat.types'
 import { Customer } from '../../customer/types/customer.types'
 
 const initialState: ChatState = {
   messages: [],
+  conversations: [],
   currentCustomer: null,
   isLoading: false,
   error: null,
@@ -23,6 +24,10 @@ const chatSlice = createSlice({
   reducers: {
     setMessages: (state, action: PayloadAction<ChatMessage[]>) => {
       state.messages = action.payload
+      state.error = null
+    },
+    setConversations: (state, action: PayloadAction<ChatConversation[]>) => {
+      state.conversations = action.payload
       state.error = null
     },
     setCurrentCustomer: (state, action: PayloadAction<Customer>) => {
@@ -46,6 +51,7 @@ const chatSlice = createSlice({
     },
     clearChat: (state) => {
       state.messages = []
+      state.conversations = []
       state.currentCustomer = null
       state.error = null
       state.pagination = initialState.pagination
@@ -55,6 +61,7 @@ const chatSlice = createSlice({
 
 export const { 
   setMessages, 
+  setConversations,
   setCurrentCustomer, 
   clearCurrentCustomer, 
   setLoading, 
