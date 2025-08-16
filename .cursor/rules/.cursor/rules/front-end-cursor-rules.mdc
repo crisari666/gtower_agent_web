@@ -14,6 +14,7 @@ This comprehensive guide outlines best practices, conventions, and standards for
     Code Style
     - Use tabs for indentation
     - Use single quotes for strings (except to avoid escaping)
+    - Dont use semicolon at the files javascript
     - Omit semicolons (unless required for disambiguation)
     - Eliminate unused variables
     - Add space after keywords
@@ -75,6 +76,7 @@ This comprehensive guide outlines best practices, conventions, and standards for
     - Avoid inline function definitions in JSX
     - Implement code splitting using dynamic imports
     - Implement proper key props in lists (avoid using index as key)
+    - Never use localState or connect to state from root view page, also connect to state from child component of the view component for avoid rerenders
 
     Next.js Best Practices
     Core Concepts
@@ -132,6 +134,7 @@ This comprehensive guide outlines best practices, conventions, and standards for
     - Implement useReducer for complex state
     - Use useContext for shared state
     - Implement proper state initialization
+    - DOnt connect to the state or user setState in main view files, like: chats-view, user-vite, etc
 
     Global State
     - Use Redux Toolkit for global state

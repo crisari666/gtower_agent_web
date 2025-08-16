@@ -1,9 +1,9 @@
-import { Outlet } from 'react-router-dom'
+import AppDrawer from './app_drawer'
 
 export default function Dashboard() {
   return (
     <>
-      <Outlet />
+      <AppDrawer />
     </>
   )
 }
