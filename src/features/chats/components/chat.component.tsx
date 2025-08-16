@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { 
@@ -22,6 +22,7 @@ interface ChatComponentProps {
 const ChatComponent: React.FC<ChatComponentProps> = ({ customerId }) => {
   const dispatch = useDispatch<AppDispatch>()
   const navigate = useNavigate()
+  const messagesEndRef = useRef<HTMLDivElement>(null)
   
   const { messages, currentCustomer, isLoading, error } = useSelector((state: RootState) => state.chat)
 
@@ -31,11 +32,14 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ customerId }) => {
     }
   }, [dispatch, customerId])
 
+  useEffect(() => {
+    // Scroll to bottom when messages change
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+  }, [messages])
+
   const handleBackClick = () => {
     navigate('/chats')
   }
-
-
 
   if (isLoading) {
     return (
@@ -73,7 +77,8 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ customerId }) => {
           gap: 2,
           borderBottom: '1px solid #e0e0e0',
           width: '100%',
-          borderRadius: 0
+          borderRadius: 0,
+          flexShrink: 0
         }}
       >
         <IconButton onClick={handleBackClick} size="small">
@@ -97,12 +102,11 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ customerId }) => {
         sx={{ 
           flex: 1, 
           overflowY: 'auto', 
-          p: 2, 
           backgroundColor: 'background.default',
           display: 'flex',
           flexDirection: 'column',
-          gap: 1,
-          width: '100%'
+          width: '100%',
+          position: 'relative'
         }}
       >
         {messages.length === 0 ? (
@@ -111,15 +115,23 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ customerId }) => {
             justifyContent="center" 
             alignItems="center" 
             minHeight="200px"
+            sx={{ flex: 1 }}
           >
             <Typography variant="body1" color="text.secondary">
               No messages yet
             </Typography>
           </Box>
         ) : (
-          messages.map((message) => (
-            <ChatItem key={message._id} message={message} />
-          ))
+          <>
+            {/* Messages List */}
+            <Box sx={{ p: 2, display: 'flex', flexDirection: 'column', gap: 1 }}>
+              {messages.map((message) => (
+                <ChatItem key={message._id} message={message} />
+              ))}
+            </Box>
+            {/* Invisible div to scroll to bottom */}
+            <div ref={messagesEndRef} />
+          </>
         )}
       </Box>
     </Box>
