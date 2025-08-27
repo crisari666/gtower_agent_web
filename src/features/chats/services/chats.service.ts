@@ -1,5 +1,5 @@
 import Api from '../../../app/http'
-import type { ConversationResponse, ChatConversationsResponse } from '../types/chat.types'
+import type { ConversationResponse, ChatConversationsResponse, StartConversationRequest } from '../types/chat.types'
 
 export class ChatsService {
   private static instance: ChatsService
@@ -56,6 +56,43 @@ export class ChatsService {
     } catch (error) {
       console.error('Error fetching customer conversation:', error)
       throw new Error('Failed to fetch customer conversation')
+    }
+  }
+
+
+  async startConversation(request: StartConversationRequest): Promise<void> {
+    try {
+      const response = await this.api.post({
+        path: '/whatsapp/start-conversation',
+        data: request
+      })
+      
+      if (!response) {
+        throw new Error('Failed to start conversation')
+      }
+      
+      return response
+    } catch (error) {
+      console.error('Error starting conversation:', error)
+      throw new Error('Failed to start conversation')
+    }
+  }
+
+  async clearConversation(customerId: string): Promise<void> {
+    try {
+      const response = await this.api.post({
+        path: `/whatsapp/conversation/customer/${customerId}/clear`,
+        data: {}
+      })
+      
+      if (!response?.success) {
+        throw new Error('Failed to clear conversation')
+      }
+      
+      return response
+    } catch (error) {
+      console.error('Error clearing conversation:', error)
+      throw new Error('Failed to clear conversation')
     }
   }
 }

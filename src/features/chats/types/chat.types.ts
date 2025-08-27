@@ -42,6 +42,13 @@ export interface ConversationResponse {
   readonly hasPreviousPage: boolean;
 }
 
+export interface StartConversationRequest {
+  readonly customerId: string;
+  readonly languageCode: string;
+  readonly customMessage: string;
+  readonly templateName: string;
+}
+
 export interface ChatState {
   readonly messages: ChatMessage[];
   readonly conversations: ChatConversation[];

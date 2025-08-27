@@ -29,7 +29,7 @@ const ConversationsList: React.FC<ConversationsListProps> = ({
 
 
   const handleConversationClick = (conversation: ChatConversation): void => {
-    navigate(`/chats/${conversation.customerId}`)
+    navigate(`/dashboard/chat/${conversation.customerId}`)
   }
 
 

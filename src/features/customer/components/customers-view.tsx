@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { 
@@ -14,24 +14,47 @@ import {
   Box, 
   Typography,
   IconButton,
-  Tooltip
+  Tooltip,
+  Button
 } from '@mui/material'
 import { Chat as ChatIcon } from '@mui/icons-material'
+import { Add as AddIcon } from '@mui/icons-material'
+import { useSnackbar } from 'notistack'
 import { AppDispatch, RootState } from '../../../app/store'
 import { fetchCustomers } from '../redux/customer-thunks'
 import { Customer } from '../types/customer.types'
+import CreateCustomerModal from './create-customer-modal'
 
 const CustomersView: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>()
   const navigate = useNavigate()
+  const { enqueueSnackbar } = useSnackbar()
   const { customers, isLoading, error } = useSelector((state: RootState) => state.customer)
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
 
   useEffect(() => {
     dispatch(fetchCustomers())
   }, [dispatch])
 
-  const handleChatClick = (customerId: string) => {
+  const handleChatClick = (customerId: string): void => {
     navigate(`/dashboard/chat/${customerId}`)
+  }
+
+  const handleAddCustomer = (): void => {
+    setIsCreateModalOpen(true)
+  }
+
+  const handleCloseCreateModal = (): void => {
+    setIsCreateModalOpen(false)
+  }
+
+  const handleCustomerNameClick = async (customerId: string): Promise<void> => {
+    try {
+      await navigator.clipboard.writeText(customerId)
+      enqueueSnackbar('Customer ID copied to clipboard', { variant: 'success' })
+    } catch (err) {
+      enqueueSnackbar('Failed to copy customer ID', { variant: 'error' })
+    }
   }
 
   if (isLoading) {
@@ -56,6 +79,16 @@ const CustomersView: React.FC = () => {
         Customers
       </Typography>
       
+      <Box mb={2}>
+        <Button
+          variant="contained"
+          startIcon={<AddIcon />}
+          onClick={handleAddCustomer}
+        >
+          Add Customer
+        </Button>
+      </Box>
+      
       {customers.length === 0 ? (
         <Box mt={2}>
           <Alert severity="info">No customers found.</Alert>
@@ -75,10 +108,21 @@ const CustomersView: React.FC = () => {
             <TableBody>
               {customers.map((customer: Customer) => (
                 <TableRow key={customer._id}>
-                  <TableCell>{customer.name}</TableCell>
-                  <TableCell>{customer.phone}</TableCell>
+                  <TableCell 
+                    onClick={() => handleCustomerNameClick(customer._id)}
+                    sx={{ 
+                      cursor: 'pointer',
+                      '&:hover': { 
+                        backgroundColor: 'action.hover',
+                        textDecoration: 'underline'
+                      }
+                    }}
+                  >
+                    {customer.name}
+                  </TableCell>
+                  <TableCell>{customer.phone || '-'}</TableCell>
                   <TableCell>{customer.whatsapp}</TableCell>
-                  <TableCell>{customer.email}</TableCell>
+                  <TableCell>{customer.email || '-'}</TableCell>
                   <TableCell align="center">
                     <Tooltip title="View Chat">
                       <IconButton
@@ -96,6 +140,10 @@ const CustomersView: React.FC = () => {
           </Table>
         </TableContainer>
       )}
+      <CreateCustomerModal
+        isOpen={isCreateModalOpen}
+        onClose={handleCloseCreateModal}
+      />
     </Box>
   )
 }

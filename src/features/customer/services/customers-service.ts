@@ -40,8 +40,8 @@ export class CustomersService {
 
   async createCustomer(customerData: CreateCustomerRequest): Promise<Customer> {
     try {
-      const response = await this.api.post({ path: '/customers', data: customerData })
-      return response.data
+      const response = await this.api.post({ path: '/whatsapp/start-conversation', data: customerData })
+      return response
     } catch (error) {
       console.error('Error creating customer:', error)
       throw new Error('Failed to create customer')

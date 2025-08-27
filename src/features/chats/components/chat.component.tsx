@@ -12,7 +12,7 @@ import {
 } from '@mui/material'
 import { ArrowBack, Chat as ChatIcon } from '@mui/icons-material'
 import { AppDispatch, RootState } from '../../../app/store'
-import { fetchCustomerConversation } from '../redux/chat-thunks'
+import { fetchCustomerConversation, clearCustomerConversation } from '../redux/chat-thunks'
 import ChatItem from './chat-item.component'
 
 interface ChatComponentProps {
@@ -126,7 +126,10 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ customerId }) => {
             {/* Messages List */}
             <Box sx={{ p: 2, display: 'flex', flexDirection: 'column', gap: 1 }}>
               {messages.map((message) => (
-                <ChatItem key={message._id} message={message} />
+                <ChatItem 
+                  key={message._id} 
+                  message={message} 
+                />
               ))}
             </Box>
             {/* Invisible div to scroll to bottom */}

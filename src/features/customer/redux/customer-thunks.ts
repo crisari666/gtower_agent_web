@@ -1,6 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import { AppDispatch, RootState } from '../../../app/store'
-import { setCustomers, setLoading, setError, clearError } from './customer-slice'
+import { setCustomers, setLoading, setError, clearError, addCustomer } from './customer-slice'
 import CustomersService from '../services/customers-service'
 import { CreateCustomerRequest, UpdateCustomerRequest } from '../types/customer.types'
 
@@ -42,10 +42,10 @@ export const createCustomer = createAsyncThunk<
     dispatch(clearError())
     
     const customersService = CustomersService.getInstance()
-    await customersService.createCustomer(customerData)
+    const newCustomer = await customersService.createCustomer(customerData)
     
-    // Refresh the customers list after creating
-    dispatch(fetchCustomers())
+    // Add the new customer to the list
+    dispatch(addCustomer(newCustomer))
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : 'Failed to create customer'
     dispatch(setError(errorMessage))

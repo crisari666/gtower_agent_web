@@ -3,28 +3,28 @@ import { useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { Box, Paper, Typography, Divider } from '@mui/material'
 import { AppDispatch, RootState } from '../../../app/store'
-import { fetchConversations } from '../redux/chat-thunks'
+import { fetchCustomers } from '../../customer/redux/customer-thunks'
 import ChatComponent from './chat.component'
-import ConversationsList from './conversations-list.component'
+import CustomersChatList from './customers-chat-list.component'
 
 const ChatView: React.FC = () => {
   const { customerId } = useParams<{ customerId: string }>()
   const dispatch = useDispatch<AppDispatch>()
-  const { conversations } = useSelector((state: RootState) => state.chat)
+  const { customers } = useSelector((state: RootState) => state.customer)
 
   useEffect(() => {
-    // Fetch conversations when component mounts
-    if (conversations.length === 0) {
-      dispatch(fetchConversations({ page: 1, limit: 20 }))
+    // Fetch customers when component mounts
+    if (customers.length === 0) {
+      dispatch(fetchCustomers())
     }
-  }, [dispatch, conversations.length])
+  }, [dispatch, customers.length])
 
   return (
     <Box sx={{ height: '100vh', display: 'flex' }}>
       <Box sx={{ display: 'flex', width: '100%', height: '100%' }}>
         {/* Conversations Column */}
         <Box sx={{ width: { xs: '100%', md: '35%', lg: '30%' }, height: '100%' }}>
-          <ConversationsList selectedConversationId={customerId} />
+          <CustomersChatList customers={customers} selectedCustomerId={customerId} />
         </Box>
         
         {/* Vertical Divider */}

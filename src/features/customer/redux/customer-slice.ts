@@ -33,6 +33,10 @@ const customerSlice = createSlice({
       state.customers = action.payload
       state.error = null
     },
+    addCustomer: (state, action: PayloadAction<Customer>) => {
+      state.customers.push(action.payload)
+      state.error = null
+    },
     setLoading: (state, action: PayloadAction<boolean>) => {
       state.isLoading = action.payload
     },
@@ -50,6 +54,7 @@ export const {
   setCustomer, 
   clearCustomer, 
   setCustomers, 
+  addCustomer, 
   setLoading, 
   setError, 
   clearError 
