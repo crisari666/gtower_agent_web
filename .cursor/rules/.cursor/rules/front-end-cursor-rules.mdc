@@ -18,7 +18,7 @@ This comprehensive guide outlines best practices, conventions, and standards for
     Code Style
     - Use tabs for indentation
     - Use single quotes for strings (except to avoid escaping)
-    - Dont use semicolon at the files javascript
+    - Dont use semicolon at the files javascript and typescript
     - Omit semicolons (unless required for disambiguation)
     - Eliminate unused variables
     - Add space after keywords

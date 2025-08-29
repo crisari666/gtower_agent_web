@@ -26,13 +26,12 @@ const ConversationsList: React.FC<ConversationsListProps> = ({
   const { conversations, isLoading, error } = useSelector((state: RootState) => state.chat)
   const navigate = useNavigate()
 
-
+  // Filter out conversations without customer data to ensure customer is always defined
+  const validConversations = conversations.filter(conversation => conversation.customer)
 
   const handleConversationClick = (conversation: ChatConversation): void => {
     navigate(`/dashboard/chat/${conversation.customerId}`)
   }
-
-
 
   if (isLoading) {
     return <LoadingConversations />
@@ -42,7 +41,7 @@ const ConversationsList: React.FC<ConversationsListProps> = ({
     return <ErrorConversations error={error} />
   }
 
-  if (conversations.length === 0) {
+  if (validConversations.length === 0) {
     return <EmptyConversations />
   }
 
@@ -53,19 +52,19 @@ const ConversationsList: React.FC<ConversationsListProps> = ({
           Conversations
         </Typography>
         <Chip 
-          label={conversations.length} 
+          label={validConversations.length} 
           size="small" 
           color="primary" 
           sx={{ ml: 1 }}
         />
       </Box>
       <List sx={{ flex: 1, overflow: 'auto', p: 0 }}>
-        {conversations.map((conversation, index) => (
+        {validConversations.map((conversation, index) => (
           <ConversationItem
             key={conversation._id}
             conversation={conversation}
             isSelected={selectedConversationId === conversation._id}
-            isLast={index === conversations.length - 1}
+            isLast={index === validConversations.length - 1}
             onClick={handleConversationClick}
           />
         ))}

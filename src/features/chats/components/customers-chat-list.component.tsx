@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { 
   Box, 
   List, 
@@ -18,6 +18,9 @@ import { Customer } from '../../customer/types/customer.types'
 import { startConversation, clearCustomerConversation } from '../redux/chat-thunks'
 import ClearConversationModal from './clear-conversation-modal'
 import { AppDispatch } from '../../../app/store'
+import { websocketService } from '../../../services/websocket.service'
+import { WhatsAppMessageEvent } from '../types/chat.types'
+import { fetchCustomers } from '../../customer/redux/customer-thunks'
 
 interface CustomersChatListProps {
   customers: Customer[]
@@ -33,6 +36,13 @@ const CustomersChatList: React.FC<CustomersChatListProps> = ({
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
   const [selectedCustomer, setSelectedCustomer] = React.useState<Customer | null>(null)
   const [isClearModalOpen, setIsClearModalOpen] = React.useState(false)
+
+  useEffect(() => {
+    // Connect to WebSocket for general updates
+    websocketService.connect(process.env.REACT_APP_API_WS!)
+    
+    // No need to manually handle messages anymore - WebSocket service handles it automatically
+  }, [])
 
   const handleMenuClick = (event: React.MouseEvent<HTMLElement>, customer: Customer) => {
     event.stopPropagation()

@@ -20,7 +20,8 @@ export const formatLastMessageTime = (dateString: string): string => {
   }
 }
 
-export const truncateMessage = (message: string, maxLength: number = 50): string => {
+export const truncateMessage = (message: string | undefined | null, maxLength: number = 50): string => {
+  if (!message) return 'No messages yet'
   return message.length > maxLength ? `${message.substring(0, maxLength)}...` : message
 }
 

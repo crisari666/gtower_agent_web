@@ -1,66 +1,97 @@
 import { Customer } from '../../customer/types/customer.types'
 
-export interface ChatMessage {
-  readonly _id: string;
-  readonly senderType: 'agent' | 'customer';
-  readonly messageType: 'text' | 'template' | 'button' | 'image' | 'file';
-  readonly content: string;
-  readonly status: 'sent' | 'delivered' | 'read' | 'failed';
-  readonly createdAt: string;
+export interface BaseMessage {
+  _id: string
+  senderType: 'agent' | 'customer'
+  messageType: string
+  content: string
+  status: string
+  createdAt: string
+}
+
+export interface ChatMessage extends BaseMessage {
+  conversationId: string
+  customerId: string
 }
 
 export interface ChatConversation {
-  readonly _id: string;
-  readonly conversationId: string;
-  readonly customerId: string;
-  readonly customerName: string;
-  readonly customerWhatsapp: string;
-  readonly lastMessage: string;
-  readonly lastMessageAt: string;
-  readonly lastMessageFrom: 'agent' | 'customer';
-  readonly status: 'active' | 'inactive' | 'closed';
-  readonly messageCount: number;
-}
-
-export interface ChatConversationsResponse {
-  readonly conversations: ChatConversation[];
-  readonly page: number;
-  readonly limit: number;
-  readonly total: number;
-  readonly totalPages: number;
-  readonly hasNextPage: boolean;
-  readonly hasPreviousPage: boolean;
-}
-
-export interface ConversationResponse {
-  readonly messages: ChatMessage[];
-  readonly page: number;
-  readonly limit: number;
-  readonly total: number;
-  readonly totalPages: number;
-  readonly hasNextPage: boolean;
-  readonly hasPreviousPage: boolean;
-}
-
-export interface StartConversationRequest {
-  readonly customerId: string;
-  readonly languageCode: string;
-  readonly customMessage: string;
-  readonly templateName: string;
+  _id: string
+  customerId: string
+  customer: Customer
+  lastMessage?: ChatMessage
+  unreadCount: number
+  status: string
+  createdAt: string
+  updatedAt: string
 }
 
 export interface ChatState {
-  readonly messages: ChatMessage[];
-  readonly conversations: ChatConversation[];
-  readonly currentCustomer: Customer | null;
-  readonly isLoading: boolean;
-  readonly error: string | null;
-  readonly pagination: {
-    readonly page: number;
-    readonly limit: number;
-    readonly total: number;
-    readonly totalPages: number;
-    readonly hasNextPage: boolean;
-    readonly hasPreviousPage: boolean;
-  };
+  messages: ChatMessage[]
+  conversations: ChatConversation[]
+  currentCustomer: Customer | null
+  isLoading: boolean
+  error: string | null
+  pagination: {
+    page: number
+    limit: number
+    total: number
+    totalPages: number
+    hasNextPage: boolean
+    hasPreviousPage: boolean
+  }
+  needsConversationsRefresh: boolean
+}
+
+export interface WhatsAppMessageEvent {
+  _id: string
+  conversationId: string
+  customerId: string
+  whatsappNumber: string
+  whatsappMessageId: string
+  senderType: 'agent' | 'customer'
+  messageType: string
+  content: string
+  status: string
+  sentAt?: Date
+  deliveredAt?: Date
+  readAt?: Date
+  metadata?: Record<string, any>
+  isTemplate: boolean
+  templateName?: string
+  timestamp: Date
+  createdAt: string
+}
+
+export interface WhatsAppStatusUpdate {
+  whatsappMessageId: string
+  status: string
+  timestamp: Date
+  metadata?: Record<string, any>
+}
+
+export interface StartConversationRequest {
+  customerId: string
+  languageCode: string
+  customMessage: string
+  templateName: string
+}
+
+export interface ConversationResponse {
+  messages: ChatMessage[]
+  page: number
+  limit: number
+  total: number
+  totalPages: number
+  hasNextPage: boolean
+  hasPreviousPage: boolean
+}
+
+export interface ChatConversationsResponse {
+  conversations: ChatConversation[]
+  page: number
+  limit: number
+  total: number
+  totalPages: number
+  hasNextPage: boolean
+  hasPreviousPage: boolean
 }

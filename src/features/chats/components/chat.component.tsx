@@ -14,6 +14,8 @@ import { ArrowBack, Chat as ChatIcon } from '@mui/icons-material'
 import { AppDispatch, RootState } from '../../../app/store'
 import { fetchCustomerConversation, clearCustomerConversation } from '../redux/chat-thunks'
 import ChatItem from './chat-item.component'
+import { websocketService } from '../../../services/websocket.service'
+import { WhatsAppMessageEvent, ChatMessage } from '../types/chat.types'
 
 interface ChatComponentProps {
   readonly customerId: string;
@@ -25,10 +27,40 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ customerId }) => {
   const messagesEndRef = useRef<HTMLDivElement>(null)
   
   const { messages, currentCustomer, isLoading, error } = useSelector((state: RootState) => state.chat)
+  
+  // Convert WhatsApp message to chat message format if needed
+  const normalizedMessages = messages.map(msg => {
+    if ('whatsappMessageId' in msg) {
+      // It's a WhatsApp message
+      const whatsappMsg = msg as WhatsAppMessageEvent
+      return {
+        _id: whatsappMsg._id,
+        conversationId: whatsappMsg.conversationId,
+        customerId: whatsappMsg.customerId,
+        senderType: whatsappMsg.senderType,
+        messageType: whatsappMsg.messageType,
+        content: whatsappMsg.content,
+        status: whatsappMsg.status,
+        createdAt: whatsappMsg.createdAt
+      } as ChatMessage
+    }
+    return msg as ChatMessage
+  })
 
   useEffect(() => {
     if (customerId) {
+      // Initial fetch of conversation
       dispatch(fetchCustomerConversation({ customerId }))
+
+      // Connect to WebSocket and join customer room
+      console.log(process.env.REACT_APP_API_WS)
+      websocketService.connect(process.env.REACT_APP_API_WS!)
+      websocketService.joinCustomerRoom(customerId)
+
+      // Cleanup function
+      return () => {
+        websocketService.leaveCustomerRoom(customerId)
+      }
     }
   }, [dispatch, customerId])
 
@@ -125,7 +157,7 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ customerId }) => {
           <>
             {/* Messages List */}
             <Box sx={{ p: 2, display: 'flex', flexDirection: 'column', gap: 1 }}>
-              {messages.map((message) => (
+              {normalizedMessages.map((message) => (
                 <ChatItem 
                   key={message._id} 
                   message={message} 

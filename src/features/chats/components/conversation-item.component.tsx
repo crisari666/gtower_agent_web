@@ -1,7 +1,13 @@
 import React from 'react'
-import { Box, Avatar, Typography, Chip, Divider } from '@mui/material'
+import { Box, Avatar, Typography, Chip, Divider, IconButton, Menu, MenuItem } from '@mui/material'
+import MoreVertIcon from '@mui/icons-material/MoreVert'
+import { useNavigate } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
 import { ChatConversation } from '../types/chat.types'
 import { formatLastMessageTime, truncateMessage, getStatusColor } from './conversations-list.utils'
+import { startConversation, clearCustomerConversation } from '../redux/chat-thunks'
+import ClearConversationModal from './clear-conversation-modal'
+import { AppDispatch } from '../../../app/store'
 
 interface ConversationItemProps {
   conversation: ChatConversation
@@ -16,8 +22,54 @@ const ConversationItem: React.FC<ConversationItemProps> = ({
   isLast,
   onClick
 }) => {
+  const navigate = useNavigate()
+  const dispatch = useDispatch<AppDispatch>()
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
+  const [isClearModalOpen, setIsClearModalOpen] = React.useState(false)
+
+  // Ensure customer is always defined (filtered at list level)
+  if (!conversation.customer) {
+    return null
+  }
+
   const handleClick = (): void => {
     onClick(conversation)
+  }
+
+  const handleMenuClick = (event: React.MouseEvent<HTMLElement>): void => {
+    event.stopPropagation()
+    setAnchorEl(event.currentTarget)
+  }
+
+  const handleMenuClose = (): void => {
+    setAnchorEl(null)
+  }
+
+  const handleStartConversation = (): void => {
+    if (conversation.customerId) {
+      dispatch(startConversation({
+        request: {
+          customerId: conversation.customerId,
+          languageCode: 'es',
+          customMessage: '',
+          templateName: 'start_conversation_es'
+        },
+        navigate
+      }))
+      handleMenuClose()
+    }
+  }
+
+  const handleClearClick = (): void => {
+    handleMenuClose()
+    setIsClearModalOpen(true)
+  }
+
+  const handleClearConfirm = (): void => {
+    if (conversation.customerId) {
+      dispatch(clearCustomerConversation({ customerId: conversation.customerId }))
+      setIsClearModalOpen(false)
+    }
   }
 
   return (
@@ -37,7 +89,7 @@ const ConversationItem: React.FC<ConversationItemProps> = ({
       >
         <Box sx={{ position: 'relative', mr: 2 }}>
           <Avatar sx={{ bgcolor: 'primary.main' }}>
-            {conversation.customerName.charAt(0).toUpperCase()}
+            {conversation.customer.name.charAt(0).toUpperCase()}
           </Avatar>
           <Box
             sx={{
@@ -55,10 +107,10 @@ const ConversationItem: React.FC<ConversationItemProps> = ({
         <Box sx={{ flex: 1, minWidth: 0 }}>
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 1 }}>
             <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
-              {conversation.customerName}
+              {conversation.customer.name}
             </Typography>
             <Typography variant="caption" color="text.secondary">
-              {formatLastMessageTime(conversation.lastMessageAt)}
+              {formatLastMessageTime(conversation.updatedAt)}
             </Typography>
           </Box>
           <Typography 
@@ -72,27 +124,55 @@ const ConversationItem: React.FC<ConversationItemProps> = ({
               mb: 1
             }}
           >
-            {conversation.lastMessageFrom === 'agent' && (
+            {conversation.lastMessage?.senderType === 'agent' && (
               <Typography component="span" color="primary.main" sx={{ fontWeight: 500 }}>
                 You: {' '}
               </Typography>
             )}
-            {truncateMessage(conversation.lastMessage)}
+            {truncateMessage(conversation.lastMessage?.content)}
           </Typography>
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <Chip 
-              label={`${conversation.messageCount} messages`} 
+              label={`${conversation.unreadCount} unread`} 
               size="small" 
               variant="outlined"
               sx={{ fontSize: '0.7rem' }}
             />
             <Typography variant="caption" color="text.secondary" sx={{ fontFamily: 'monospace' }}>
-              {conversation.customerWhatsapp}
+              {conversation.customer.whatsapp}
             </Typography>
           </Box>
         </Box>
+        <IconButton 
+          edge="end" 
+          aria-label="more"
+          onClick={handleMenuClick}
+          sx={{ ml: 1 }}
+        >
+          <MoreVertIcon />
+        </IconButton>
       </Box>
       {!isLast && <Divider />}
+      
+      <Menu
+        anchorEl={anchorEl}
+        open={Boolean(anchorEl)}
+        onClose={handleMenuClose}
+      >
+        <MenuItem onClick={handleStartConversation}>
+          Start Conversation
+        </MenuItem>
+        <MenuItem onClick={handleClearClick}>
+          Clear Conversation
+        </MenuItem>
+      </Menu>
+
+      <ClearConversationModal
+        isOpen={isClearModalOpen}
+        onClose={() => setIsClearModalOpen(false)}
+        onConfirm={handleClearConfirm}
+        customerName={conversation.customer.name}
+      />
     </>
   )
 }

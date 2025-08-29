@@ -18,7 +18,7 @@ export class ChatsService {
 
   async getConversations(
     page: number = 1, 
-    limit: number = 20
+    limit: number = 100
   ): Promise<ChatConversationsResponse> {
     try {
       const response = await this.api.get({ 
@@ -40,7 +40,7 @@ export class ChatsService {
   async getCustomerConversation(
     customerId: string, 
     page: number = 1, 
-    limit: number = 50
+    limit: number = 100
   ): Promise<ConversationResponse> {
     try {
       const response = await this.api.get({ 

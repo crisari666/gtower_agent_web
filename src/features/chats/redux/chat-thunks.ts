@@ -13,6 +13,7 @@ import {
 import ChatsService from '../services/chats.service'
 import { StartConversationRequest } from '../types/chat.types'
 import CustomersService from '../../customer/services/customers-service'
+import { ChatConversation } from '../types/chat.types'
 
 export const fetchConversations = createAsyncThunk<
   void,
@@ -27,9 +28,29 @@ export const fetchConversations = createAsyncThunk<
     dispatch(clearError())
     
     const chatsService = ChatsService.getInstance()
+    const customersService = CustomersService.getInstance()
     const conversationsResponse = await chatsService.getConversations(page, limit)
     
-    dispatch(setConversations(conversationsResponse.conversations))
+    // Fetch customer data for each conversation and filter out those without customer data
+    const conversationsWithCustomers = await Promise.all(
+      conversationsResponse.conversations.map(async (conversation) => {
+        try {
+          const customer = await customersService.getCustomerById(conversation.customerId)
+          return customer ? {
+            ...conversation,
+            customer
+          } : null
+        } catch (error) {
+          console.warn(`Failed to fetch customer ${conversation.customerId}:`, error)
+          return null
+        }
+      })
+    )
+    
+    // Filter out conversations without customer data and ensure proper typing
+    const validConversations = conversationsWithCustomers.filter((conversation): conversation is ChatConversation => conversation !== null)
+    
+    dispatch(setConversations(validConversations))
     dispatch(setPagination({
       page: conversationsResponse.page,
       limit: conversationsResponse.limit,
