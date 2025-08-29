@@ -1,6 +1,6 @@
-import React from 'react';
-import { Box } from '@mui/material';
-import ChatView from '../../features/chats/components/chat-view.component';
+import React from 'react'
+import { Box } from '@mui/material'
+import ChatView from '../../features/chats/components/chat-view.component'
 
 const ChatsPage: React.FC = () => {
   return (
@@ -12,7 +12,7 @@ const ChatsPage: React.FC = () => {
     }}>
       <ChatView />
     </Box>
-  );
-};
+  )
+}
 
-export default ChatsPage;
+export default ChatsPage

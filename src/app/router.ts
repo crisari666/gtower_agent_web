@@ -5,6 +5,7 @@ import { Page1 } from '../pages/page1'
 import { Page2 } from '../pages/page2'
 import { Page3 } from '../pages/page3'
 import { CustomerView } from '../pages/customer'
+import { ProspectsViewPage } from '../pages/prospects'
 import SignInPage from '../pages/auth/signin_page'
 import Dashboard from '../features/dashboard/dashboard'
 import AgentView from '../pages/agent'
@@ -24,6 +25,7 @@ export const router = createBrowserRouter([
       {path: 'page2',Component: Page2,},
       {path: 'page3',Component: Page3,},
       {path: 'customer',Component: CustomerView,},
+      {path: 'prospects',Component: ProspectsViewPage,},
       {path: 'agent',Component: AgentView},
       {path: 'chat/:customerId', Component: ChatView},
     ],

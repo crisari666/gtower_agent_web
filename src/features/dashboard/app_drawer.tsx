@@ -20,6 +20,7 @@ import HomeIcon from '@mui/icons-material/Home'
 import PersonIcon from '@mui/icons-material/Person'
 import SmartToyIcon from '@mui/icons-material/SmartToy'
 import PageviewIcon from '@mui/icons-material/Pageview'
+import GroupIcon from '@mui/icons-material/Group'
 import { Outlet, useNavigate, useLocation } from 'react-router-dom'
 import { ThemeToggle } from '../../app/theme'
 
@@ -105,6 +106,7 @@ const NAVIGATION_ITEMS: NavigationItem[] = [
   { text: 'Page 2', icon: <PageviewIcon />, path: '/dashboard/page2' },
   { text: 'Page 3', icon: <PageviewIcon />, path: '/dashboard/page3' },
   { text: 'Customer', icon: <PersonIcon />, path: '/dashboard/customer' },
+  { text: 'Prospects', icon: <GroupIcon />, path: '/dashboard/prospects' },
   { text: 'Agent', icon: <SmartToyIcon />, path: '/dashboard/agent' },
 ]
 
