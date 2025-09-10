@@ -83,7 +83,7 @@ export const startConversation = createAsyncThunk<
     await chatsService.startConversation(request)
     
     // Redirect to chat view
-    navigate(`/chat/${request.customerId}`)
+    navigate(`/dashboard/chat/${request.customerId}`)
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : 'Failed to start conversation'
     dispatch(setError(errorMessage))

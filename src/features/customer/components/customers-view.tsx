@@ -44,7 +44,7 @@ const CustomersView: React.FC = () => {
     dispatch(startConversation({
       request: {
         customerId,
-        languageCode: 'en',
+        languageCode: 'es',
         customMessage: '',
         templateName: 'start_conversation_es'
       },

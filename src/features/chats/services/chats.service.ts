@@ -63,7 +63,7 @@ export class ChatsService {
   async startConversation(request: StartConversationRequest): Promise<void> {
     try {
       const response = await this.api.post({
-        path: '/whatsapp/start-conversation',
+        path: '/chats/start-conversation',
         data: request
       })
       
