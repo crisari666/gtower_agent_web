@@ -1,18 +1,21 @@
 export interface Customer {
   readonly _id: string;
   readonly name: string;
-  readonly phone?: string;
-  readonly whatsapp: string;
+  readonly phone: string;
+  readonly whatsapp?: string;
   readonly email?: string;
   readonly address?: string;
   readonly createdAt?: string;
   readonly updatedAt?: string;
+  readonly isProspect?: boolean;
+  readonly replied?: boolean;
+  readonly firstMessageSent?: boolean;
 }
 
 export interface CreateCustomerRequest {
   readonly name: string;
-  readonly phone?: string;
-  readonly whatsapp: string;
+  readonly phone: string;
+  readonly whatsapp?: string;
   readonly email?: string;
   readonly address?: string;
 }

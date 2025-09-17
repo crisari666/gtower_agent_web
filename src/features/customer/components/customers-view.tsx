@@ -15,7 +15,8 @@ import {
   Typography,
   IconButton,
   Tooltip,
-  Button
+  Button,
+  Chip
 } from '@mui/material'
 import { Chat as ChatIcon, Send as SendIcon, Add as AddIcon } from '@mui/icons-material'
 import { useSnackbar } from 'notistack'
@@ -130,7 +131,20 @@ const CustomersView: React.FC = () => {
                       }
                     }}
                   >
-                    {customer.name}
+                    <Box display="flex" alignItems="center" gap={1}>
+                      {customer.isProspect && (
+                        <Box
+                          sx={{
+                            width: 12,
+                            height: 12,
+                            borderRadius: '50%',
+                            backgroundColor: 'green',
+                            flexShrink: 0
+                          }}
+                        />
+                      )}
+                      {customer.name}
+                    </Box>
                   </TableCell>
                   <TableCell>{customer.phone || '-'}</TableCell>
                   <TableCell>{customer.whatsapp}</TableCell>
@@ -148,6 +162,7 @@ const CustomersView: React.FC = () => {
                       </Tooltip>
                       <Tooltip title="Start New Conversation">
                         <IconButton
+                          disabled={customer.firstMessageSent === true}
                           onClick={() => handleStartConversation(customer._id)}
                           color="secondary"
                           size="small"

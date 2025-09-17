@@ -1,6 +1,27 @@
 import Api from '../../../app/http'
 import { Customer, CreateCustomerRequest, UpdateCustomerRequest } from '../types/customer.types'
 
+export interface BulkCustomerData {
+  name: string;
+  phone: string;
+  country: string;
+}
+
+export interface BulkCreateCustomerRequest {
+  customers: BulkCustomerData[];
+}
+
+export interface BulkCreateCustomerResponse {
+  created: Customer[];
+  skipped: {
+    phone: string;
+    reason: string;
+  }[];
+  totalProcessed: number;
+  createdCount: number;
+  skippedCount: number;
+}
+
 export class CustomersService {
   private static instance: CustomersService
   private api: Api
@@ -67,6 +88,20 @@ export class CustomersService {
       throw new Error('Failed to delete customer')
     }
   }
+
+  async createBulkCustomers(customersData: BulkCreateCustomerRequest): Promise<BulkCreateCustomerResponse> {
+    try {
+      const response = await this.api.post({ 
+        path: '/customers/bulk', 
+        data: customersData 
+      })
+      return response
+    } catch (error) {
+      console.error('Error creating bulk customers:', error)
+      throw new Error('Failed to create bulk customers')
+    }
+  }
+
 }
 
 export default CustomersService

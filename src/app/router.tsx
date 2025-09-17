@@ -5,6 +5,7 @@ import { Page1 } from '../pages/page1'
 import { Page2 } from '../pages/page2'
 import { Page3 } from '../pages/page3'
 import { CustomerView } from '../pages/customer'
+import { ImportCustomersPage } from '../pages/customer/import-customers'
 import { AgentView } from '../pages/agent'
 import ChatView from '../features/chats/components/chat-view.component'
 import { Nav } from '../components/Nav'
@@ -15,6 +16,7 @@ export const APP_ROUTES = {
   page2: '/page2',
   page3: '/page3',
   customer: '/customer',
+  importCustomers: '/customer/import',
   agent: '/agent',
   chats: '/chats',
 } as const
@@ -56,6 +58,10 @@ export const router = createBrowserRouter([
       {
         path: 'customer',
         Component: CustomerView,
+      },
+      {
+        path: 'customer/import',
+        Component: ImportCustomersPage,
       },
       {
         path: 'agent',
