@@ -63,7 +63,7 @@ const ConversationsList: React.FC<ConversationsListProps> = ({
           <ConversationItem
             key={conversation._id}
             conversation={conversation}
-            isSelected={selectedConversationId === conversation._id}
+            isSelected={selectedConversationId === conversation.customerId}
             isLast={index === validConversations.length - 1}
             onClick={handleConversationClick}
           />
