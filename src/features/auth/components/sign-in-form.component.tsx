@@ -8,7 +8,7 @@ import styles from './sign-in-form.module.scss'
 
 export const SignInForm: React.FC = () => {
   const [formData, setFormData] = useState<SignInRequest>({
-    email: '',
+    username: '',
     password: '',
   })
 
@@ -28,8 +28,13 @@ export const SignInForm: React.FC = () => {
     event.preventDefault()
     
     try {
-      await dispatch(signIn(formData)).unwrap()
-      navigate('/dashboard')
+      const isAuthenticated = await dispatch(signIn(formData)).unwrap()
+      console.log({isAuthenticated})
+      if (isAuthenticated) {
+        navigate('/dashboard')
+      }
+      // If authentication fails, the error is already handled in the thunk
+      // and displayed in the UI through the error state
     } catch (error) {
       // Error is handled in the thunk
     }
@@ -39,12 +44,12 @@ export const SignInForm: React.FC = () => {
     <div className={styles['sign-in-form']}>
       <form onSubmit={handleSubmit}>
         <div className={styles['form-group']}>
-          <label htmlFor="email">Email</label>
+          <label htmlFor="username">Username</label>
           <input
-            type="email"
-            id="email"
-            name="email"
-            value={formData.email}
+            type="text"
+            id="username"
+            name="username"
+            value={formData.username}
             onChange={handleInputChange}
             required
             disabled={isLoading}

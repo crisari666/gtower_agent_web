@@ -22,7 +22,10 @@ import SmartToyIcon from '@mui/icons-material/SmartToy'
 import PageviewIcon from '@mui/icons-material/Pageview'
 import GroupIcon from '@mui/icons-material/Group'
 import UploadIcon from '@mui/icons-material/Upload'
+import LogoutIcon from '@mui/icons-material/Logout'
 import { Outlet, useNavigate, useLocation } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
+import { signOut } from '../auth/redux/auth-thunks'
 import { ThemeToggle } from '../../app/theme'
 
 const DRAWER_WIDTH = 240
@@ -116,6 +119,7 @@ export default function AppDrawer(): React.ReactElement {
   const theme = useTheme()
   const navigate = useNavigate()
   const location = useLocation()
+  const dispatch = useDispatch()
   const [isOpen, setIsOpen] = React.useState<boolean>(false)
 
   const handleDrawerOpen = (): void => {
@@ -128,6 +132,15 @@ export default function AppDrawer(): React.ReactElement {
 
   const handleNavigate = (path: string): void => {
     navigate(path)
+  }
+
+  const handleLogout = async (): Promise<void> => {
+    try {
+      await dispatch(signOut() as any).unwrap()
+      navigate('/')
+    } catch (error) {
+      console.error('Logout failed:', error)
+    }
   }
 
   const isActiveRoute = (path: string): boolean => {
@@ -198,6 +211,33 @@ export default function AppDrawer(): React.ReactElement {
         </DrawerHeader>
         <Divider />
         <List>{renderNavigationItems(NAVIGATION_ITEMS)}</List>
+        <Divider />
+        <List>
+          <ListItem disablePadding sx={{ display: 'block' }}>
+            <ListItemButton
+              onClick={handleLogout}
+              sx={{
+                minHeight: 48,
+                justifyContent: isOpen ? 'initial' : 'center',
+                px: 2.5,
+              }}
+            >
+              <ListItemIcon
+                sx={{
+                  minWidth: 0,
+                  mr: isOpen ? 3 : 'auto',
+                  justifyContent: 'center',
+                }}
+              >
+                <LogoutIcon />
+              </ListItemIcon>
+              <ListItemText
+                primary="Logout"
+                sx={{ opacity: isOpen ? 1 : 0 }}
+              />
+            </ListItemButton>
+          </ListItem>
+        </List>
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <DrawerHeader />

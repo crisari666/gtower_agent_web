@@ -1,10 +1,11 @@
 import { AxiosError, AxiosResponse } from 'axios'
 import axios from 'axios'
-// import { OmegaSoftConstants } from './khas-web-constants'
 import { store } from './store'
-// import { endSessionForceUserAction } from '../features/signin/signin.slice'
+import { logout } from '../features/auth/redux/auth-slice'
+
 const urlApi = process.env.REACT_APP_API_URL
 console.log({urlApi})
+
 const apiAxios = axios.create({
   baseURL: urlApi,
   headers: {
@@ -24,8 +25,7 @@ export default class Api {
 
   async get({ path, data, body }: { path: string; data?: object, body?: object }) {
     const token = await this.getToken()
-    //console.log({ token })
-    const headers = { token: token! }
+    const headers = this.buildHeaders(token)
     try {
       const responseGet: AxiosResponse = await apiAxios.get(path, {
         params: data,
@@ -34,127 +34,99 @@ export default class Api {
       })
       return responseGet.data
     } catch (error) {
-      const e = error as AxiosError
-      if (
-        e.response?.status === 401 &&
-        e.response?.data !== undefined &&
-        e.response?.data !== undefined
-      ) {
-        const data: any = e.response?.data
-        if (data.error != null && data.error === 'Unauthorized') {
-          // store.dispatch(endSessionForceUserAction())
-          // localStorage.removeItem('auth')
-        }
-      }
+      this.handleUnauthorizedError(error as AxiosError)
+      throw error
     }
   }
 
   async post({ path, data, isFormData = false }: { path: string; data: any, isFormData?: boolean}) {
     try {
       const token = await this.getToken()
+      const headers = this.buildHeaders(token, isFormData)
       
-      const headers = { token: token!, 'Content-type': isFormData ? 'multipart/form-data' : 'application/json'}
       const responsePost: AxiosResponse = await apiAxios.post(path, data, {
         headers,
       })
-      //console.log({responsePost});
       return await responsePost.data
     } catch (error) {
-      const e = error as AxiosError
-      if (
-        e.response?.status === 401 &&
-        e.response?.data !== undefined &&
-        e.response?.data !== undefined
-      ) {
-        const data: any = e.response?.data
-        if (data.error != null && data.error === 'Unauthorized') {
-          // store.dispatch(endSessionForceUserAction())
-          // localStorage.removeItem('auth')
-        }
-      }
+      this.handleUnauthorizedError(error as AxiosError)
+      throw error
     }
   }
  
   async patch({ path, data= {}, isFormData = false }: { path: string; data?: any, isFormData?: boolean}) {
     try {
       const token = await this.getToken()
-      const urlApi = process.env.REACT_APP_API_URL
+      const headers = this.buildHeaders(token, isFormData)
       
-      const headers = { token: token!, 'Content-type': isFormData ? 'multipart/form-data' : 'application/json'}
       const responsePost: AxiosResponse = await apiAxios.patch(path, data, {
         headers,
       })
-      //console.log({responsePost});
       return await responsePost.data
     } catch (error) {
-      const e = error as AxiosError
-      if (
-        e.response?.status === 401 &&
-        e.response?.data !== undefined &&
-        e.response?.data !== undefined
-      ) {
-        const data: any = e.response?.data
-        if (data.error != null && data.error === 'Unauthorized') {
-          // store.dispatch(endSessionForceUserAction())
-          // localStorage.removeItem('auth')
-        }
-      }
+      this.handleUnauthorizedError(error as AxiosError)
+      throw error
     }
   }
 
   async put({ path, data = {} }: { path: string; data?: object }) {
     try {
       const token = await this.getToken()
-      const headers = { token: token! }
+      const headers = this.buildHeaders(token)
       const responsePut: AxiosResponse = await apiAxios.put(path, data, {
         headers,
       })
-      //console.log({responsePut});
       return await responsePut.data
     } catch (error) {
-      const e = error as AxiosError
-      if (
-        e.response?.status === 401 &&
-        e.response?.data !== undefined &&
-        e.response?.data !== undefined
-      ) {
-        const data: any = e.response?.data
-        if (data.error != null && data.error === 'Unauthorized') {
-          // store.dispatch(endSessionForceUserAction())
-          // localStorage.removeItem(OmegaSoftConstants.localstorageAuthKey)
-        }
-      }
+      this.handleUnauthorizedError(error as AxiosError)
+      throw error
     }
   }
 
   async delete({ path, data }: { path: string; data?: object }) {
     try {
       const token = await this.getToken()
-      const headers = { token: token! }
+      const headers = this.buildHeaders(token)
       const responseDelete: AxiosResponse = await apiAxios.delete(path, {
         data: data,
         headers,
       })
-      //console.log({responseDelete});
       return await responseDelete.data
     } catch (error) {
-      const e = error as AxiosError
-      if (
-        e.response?.status === 401 &&
-        e.response?.data !== undefined &&
-        e.response?.data !== undefined
-      ) {
-        const data: any = e.response?.data
-        if (data.error != null && data.error === 'Unauthorized') {
-          // store.dispatch(endSessionForceUserAction())
-          // localStorage.removeItem(OmegaSoftConstants.localstorageAuthKey)
-        }
-      }
+      this.handleUnauthorizedError(error as AxiosError)
+      throw error
     }
   }
 
   getToken(): string | null {
-    return '999'
-    // return localStorage.getItem(OmegaSoftConstants.localstorageTokenKey)
+    return localStorage.getItem('auth_token')
+  }
+
+  private buildHeaders(token: string | null, isFormData: boolean = false): Record<string, string> {
+    const headers: Record<string, string> = {
+      'Content-type': isFormData ? 'multipart/form-data' : 'application/json'
+    }
+    
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`
+    }
+    
+    return headers
+  }
+
+  private handleUnauthorizedError(error: AxiosError): void {
+    if (error.response?.status === 401) {
+      const data: any = error.response?.data
+      if (data?.error === 'Unauthorized' || data?.message === 'No token provided') {
+        // Clear token from localStorage
+        localStorage.removeItem('auth_token')
+        
+        // Dispatch logout action
+        store.dispatch(logout())
+        
+        // Redirect to signin page
+        //window.location.href = '/'
+      }
+    }
   }
 }

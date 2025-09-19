@@ -6,9 +6,11 @@ import { Page2 } from '../pages/page2'
 import { Page3 } from '../pages/page3'
 import { CustomerView } from '../pages/customer'
 import { ImportCustomersPage } from '../pages/customer/import-customers'
-import { AgentView } from '../pages/agent'
+import AgentView from '../pages/agent'
 import ChatView from '../features/chats/components/chat-view.component'
+import SignInPage from '../pages/auth/signin_page'
 import { Nav } from '../components/Nav'
+import { ProtectedRoute } from '../components/ProtectedRoute'
 
 export const APP_ROUTES = {
   home: '/',
@@ -19,6 +21,7 @@ export const APP_ROUTES = {
   importCustomers: '/customer/import',
   agent: '/agent',
   chats: '/chats',
+  signin: '/signin',
 } as const
 
 export type AppRouteKey = keyof typeof APP_ROUTES
@@ -27,14 +30,20 @@ function RootLayout() {
   return (
     <div className="App">
       <main>
-        <Nav />
-        <Outlet />
+        <ProtectedRoute>
+          <Nav />
+          <Outlet />
+        </ProtectedRoute>
       </main>
     </div>
   )
 }
 
 export const router = createBrowserRouter([
+  {
+    path: '/signin',
+    Component: SignInPage,
+  },
   {
     path: '/',
     Component: RootLayout,

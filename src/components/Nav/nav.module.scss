@@ -1,3 +1,12 @@
+nav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 16px;
+  background-color: rgba(0, 0, 0, 0.05);
+  border-bottom: 1px solid rgba(112, 76, 182, 0.2);
+}
+
 .link {
   appearance: none;
   background: none;
@@ -22,4 +31,41 @@
 .active {
   border: 2px solid rgba(112, 76, 182, 0.4);
   background-color: rgba(112, 76, 182, 0.2);
+}
+
+.user-section {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-left: auto;
+  padding: 8px 12px;
+}
+
+.user-name {
+  font-size: 16px;
+  color: rgb(112, 76, 182);
+  font-weight: 500;
+}
+
+.logout-button {
+  appearance: none;
+  background: rgba(220, 38, 38, 0.1);
+  border: 2px solid rgba(220, 38, 38, 0.3);
+  color: rgb(220, 38, 38);
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 150ms;
+
+  &:hover:not(:disabled) {
+    background: rgba(220, 38, 38, 0.2);
+    border-color: rgba(220, 38, 38, 0.5);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
 }
