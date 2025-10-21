@@ -13,7 +13,7 @@ const initialState: ProspectsState = {
   error: null,
 }
 
-const prospectsSlice = createSlice({
+export const prospectsSlice = createSlice({
   name: 'prospects',
   initialState,
   reducers: {

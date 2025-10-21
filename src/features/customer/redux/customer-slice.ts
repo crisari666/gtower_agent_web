@@ -17,7 +17,7 @@ const initialState: CustomerState = {
   error: null,
 }
 
-const customerSlice = createSlice({
+export const customerSlice = createSlice({
   name: 'customer',
   initialState,
   reducers: {

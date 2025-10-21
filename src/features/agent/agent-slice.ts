@@ -12,7 +12,7 @@ const initialState: AgentState = {
   isOnline: false,
 }
 
-const agentSlice = createSlice({
+export const agentSlice = createSlice({
   name: 'agent',
   initialState,
   reducers: {

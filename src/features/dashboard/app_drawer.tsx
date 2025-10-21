@@ -106,12 +106,7 @@ interface NavigationItem {
 
 const NAVIGATION_ITEMS: NavigationItem[] = [
   { text: 'Home', icon: <HomeIcon />, path: '/dashboard' },
-  { text: 'Page 1', icon: <PageviewIcon />, path: '/dashboard/page1' },
-  { text: 'Page 2', icon: <PageviewIcon />, path: '/dashboard/page2' },
-  { text: 'Page 3', icon: <PageviewIcon />, path: '/dashboard/page3' },
   { text: 'Customer', icon: <PersonIcon />, path: '/dashboard/customer' },
-  { text: 'Import Customers', icon: <UploadIcon />, path: '/dashboard/customer/import' },
-  { text: 'Prospects', icon: <GroupIcon />, path: '/dashboard/prospects' },
   { text: 'Agent', icon: <SmartToyIcon />, path: '/dashboard/agent' },
 ]
 

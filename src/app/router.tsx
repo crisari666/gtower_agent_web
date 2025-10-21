@@ -7,7 +7,6 @@ import { Page3 } from '../pages/page3'
 import { CustomerView } from '../pages/customer'
 import { ImportCustomersPage } from '../pages/customer/import-customers'
 import AgentView from '../pages/agent'
-import ChatView from '../features/chats/components/chat-view.component'
 import SignInPage from '../pages/auth/signin_page'
 import { Nav } from '../components/Nav'
 import { ProtectedRoute } from '../components/ProtectedRoute'
@@ -20,7 +19,6 @@ export const APP_ROUTES = {
   customer: '/customer',
   importCustomers: '/customer/import',
   agent: '/agent',
-  chats: '/chats',
   signin: '/signin',
 } as const
 
@@ -75,14 +73,6 @@ export const router = createBrowserRouter([
       {
         path: 'agent',
         Component: AgentView,
-      },
-      {
-        path: 'chats',
-        Component: ChatView,
-      },
-      {
-        path: 'chats/:customerId',
-        Component: ChatView,
       },
     ],
   },

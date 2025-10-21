@@ -7,7 +7,6 @@ import { ProspectsViewPage } from '../pages/prospects'
 import SignInPage from '../pages/auth/signin_page'
 import Dashboard from '../features/dashboard/dashboard'
 import AgentView from '../pages/agent'
-import ChatView from '../features/chats/components/chat-view.component'
 
 export const router = createBrowserRouter([
   {
@@ -23,8 +22,6 @@ export const router = createBrowserRouter([
       {path: 'customer/import',Component: ImportCustomersPage},
       {path: 'prospects',Component: ProspectsViewPage,},
       {path: 'agent',Component: AgentView},
-      {path: 'chat', Component: ChatView},
-      {path: 'chat/:customerId', Component: ChatView},
     ],
   },
 ])

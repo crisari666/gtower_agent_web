@@ -24,7 +24,6 @@ export function Nav() {
       <NavLinkPersist className={className} to='/page3'>Page 3</NavLinkPersist>
       <NavLinkPersist className={className} to='/customer'>Customer</NavLinkPersist>
       <NavLinkPersist className={className} to='/agent'>Agent</NavLinkPersist>
-      <NavLinkPersist className={className} to='/chats'>Chats</NavLinkPersist>
       
       {user && (
         <div className={style['user-section']}>

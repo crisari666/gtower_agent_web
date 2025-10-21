@@ -1,10 +1,15 @@
 import { AxiosError, AxiosResponse } from 'axios'
 import axios from 'axios'
-import { store } from './store'
-import { logout } from '../features/auth/redux/auth-slice'
 
 const urlApi = process.env.REACT_APP_API_URL
 console.log({urlApi})
+
+// Unauthorized callback function
+let unauthorizedCallback: (() => void) | null = null
+
+export const setUnauthorizedCallback = (callback: () => void) => {
+  unauthorizedCallback = callback
+}
 
 const apiAxios = axios.create({
   baseURL: urlApi,
@@ -121,8 +126,10 @@ export default class Api {
         // Clear token from localStorage
         localStorage.removeItem('auth_token')
         
-        // Dispatch logout action
-        store.dispatch(logout())
+        // Call the unauthorized callback if it's set
+        if (unauthorizedCallback) {
+          unauthorizedCallback()
+        }
         
         // Redirect to signin page
         //window.location.href = '/'

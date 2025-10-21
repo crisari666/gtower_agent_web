@@ -13,7 +13,7 @@ export interface AuthState {
 }
 
 export interface SignInRequest {
-  readonly username: string
+  readonly identifier: string
   readonly password: string
 }
 

@@ -18,11 +18,10 @@ import {
   Button,
   Chip
 } from '@mui/material'
-import { Chat as ChatIcon, Send as SendIcon, Add as AddIcon } from '@mui/icons-material'
+import { Add as AddIcon } from '@mui/icons-material'
 import { useSnackbar } from 'notistack'
 import { AppDispatch, RootState } from '../../../app/store'
 import { fetchCustomers } from '../redux/customer-thunks'
-import { startConversation } from '../../chats/redux/chat-thunks'
 import { Customer } from '../types/customer.types'
 import CreateCustomerModal from './create-customer-modal'
 
@@ -37,21 +36,6 @@ const CustomersView: React.FC = () => {
     dispatch(fetchCustomers())
   }, [dispatch])
 
-  const handleChatClick = (customerId: string): void => {
-    navigate(`/dashboard/chat/${customerId}`)
-  }
-
-  const handleStartConversation = (customerId: string): void => {
-    dispatch(startConversation({
-      request: {
-        customerId,
-        languageCode: 'es',
-        customMessage: '',
-        templateName: 'start_conversation_es'
-      },
-      navigate
-    }))
-  }
 
   const handleAddCustomer = (): void => {
     setIsCreateModalOpen(true)
@@ -151,25 +135,7 @@ const CustomersView: React.FC = () => {
                   <TableCell>{customer.email || '-'}</TableCell>
                   <TableCell align="center">
                     <Box display="flex" justifyContent="center" gap={1}>
-                      <Tooltip title="View Chat">
-                        <IconButton
-                          onClick={() => handleChatClick(customer._id)}
-                          color="primary"
-                          size="small"
-                        >
-                          <ChatIcon />
-                        </IconButton>
-                      </Tooltip>
-                      <Tooltip title="Start New Conversation">
-                        <IconButton
-                          disabled={customer.firstMessageSent === true}
-                          onClick={() => handleStartConversation(customer._id)}
-                          color="secondary"
-                          size="small"
-                        >
-                          <SendIcon />
-                        </IconButton>
-                      </Tooltip>
+                      {/* Actions removed - chat functionality disabled */}
                     </Box>
                   </TableCell>
                 </TableRow>
