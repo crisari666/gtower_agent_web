@@ -1,9 +1,6 @@
 import { AxiosError, AxiosResponse } from 'axios'
 import axios from 'axios'
 
-const urlApi = process.env.REACT_APP_API_URL
-console.log({urlApi})
-
 // Unauthorized callback function
 let unauthorizedCallback: (() => void) | null = null
 
@@ -11,19 +8,25 @@ export const setUnauthorizedCallback = (callback: () => void) => {
   unauthorizedCallback = callback
 }
 
-const apiAxios = axios.create({
-  baseURL: urlApi,
-  headers: {
-    'Content-type': 'application/json',
-  },
-})
-
 export default class Api {
   private static instance: Api
+  private apiAxios: any
   
-  public static getInstance(): Api {
+  constructor(baseURL?: string) {
+    // Use provided base URL or fallback to environment variable
+    const urlApi = baseURL || 'noSettedBaseURL'
+    console.log({urlApi})
+    this.apiAxios = axios.create({
+      baseURL: urlApi,
+      headers: {
+        'Content-type': 'application/json',
+      },
+    })
+  }
+  
+  public static getInstance(baseURL?: string): Api {
     if (!Api.instance) {
-      Api.instance = new Api()
+      Api.instance = new Api(baseURL)
     }
     return Api.instance
   }
@@ -32,7 +35,7 @@ export default class Api {
     const token = await this.getToken()
     const headers = this.buildHeaders(token)
     try {
-      const responseGet: AxiosResponse = await apiAxios.get(path, {
+      const responseGet: AxiosResponse = await this.apiAxios.get(path, {
         params: data,
         data: body,
         headers,
@@ -49,7 +52,7 @@ export default class Api {
       const token = await this.getToken()
       const headers = this.buildHeaders(token, isFormData)
       
-      const responsePost: AxiosResponse = await apiAxios.post(path, data, {
+      const responsePost: AxiosResponse = await this.apiAxios.post(path, data, {
         headers,
       })
       return await responsePost.data
@@ -64,7 +67,7 @@ export default class Api {
       const token = await this.getToken()
       const headers = this.buildHeaders(token, isFormData)
       
-      const responsePost: AxiosResponse = await apiAxios.patch(path, data, {
+      const responsePost: AxiosResponse = await this.apiAxios.patch(path, data, {
         headers,
       })
       return await responsePost.data
@@ -78,7 +81,7 @@ export default class Api {
     try {
       const token = await this.getToken()
       const headers = this.buildHeaders(token)
-      const responsePut: AxiosResponse = await apiAxios.put(path, data, {
+      const responsePut: AxiosResponse = await this.apiAxios.put(path, data, {
         headers,
       })
       return await responsePut.data
@@ -92,7 +95,7 @@ export default class Api {
     try {
       const token = await this.getToken()
       const headers = this.buildHeaders(token)
-      const responseDelete: AxiosResponse = await apiAxios.delete(path, {
+      const responseDelete: AxiosResponse = await this.apiAxios.delete(path, {
         data: data,
         headers,
       })

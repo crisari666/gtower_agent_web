@@ -127,6 +127,7 @@ src/
 | **Cross-Feature Imports** | Only via re-export from index files. |
 | **Testing** | Focus on logic (hooks, reducers, services), not styling. |
 | **Interface, Types** | create types instead interface when is possible. |
+| **Semicolon | never add or use semicolons at the endlines. |
 
 ---
 

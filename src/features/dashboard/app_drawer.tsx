@@ -23,6 +23,8 @@ import PageviewIcon from '@mui/icons-material/Pageview'
 import GroupIcon from '@mui/icons-material/Group'
 import UploadIcon from '@mui/icons-material/Upload'
 import LogoutIcon from '@mui/icons-material/Logout'
+import FitnessCenterIcon from '@mui/icons-material/FitnessCenter'
+import AccessibleIcon from '@mui/icons-material/Accessible'
 import { Outlet, useNavigate, useLocation } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { signOut } from '../auth/redux/auth-thunks'
@@ -108,6 +110,8 @@ const NAVIGATION_ITEMS: NavigationItem[] = [
   { text: 'Home', icon: <HomeIcon />, path: '/dashboard' },
   { text: 'Customer', icon: <PersonIcon />, path: '/dashboard/customer' },
   { text: 'Agent', icon: <SmartToyIcon />, path: '/dashboard/agent' },
+  { text: 'Muscles', icon: <FitnessCenterIcon />, path: '/dashboard/muscles' },
+  { text: 'Body Parts', icon: <AccessibleIcon />, path: '/dashboard/body-parts' },
 ]
 
 export default function AppDrawer(): React.ReactElement {

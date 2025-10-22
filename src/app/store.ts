@@ -5,11 +5,13 @@ import { customerSlice } from '../features/customer/redux/customer-slice'
 import { agentSlice } from '../features/agent/agent-slice'
 import { prospectsSlice } from '../features/prospects/redux/prospects-slice'
 import { authSlice } from '../features/auth/redux/auth-slice'
+import { musclesSlice } from '../features/muscles/redux/muscles-slice'
+import { bodyPartsSlice } from '../features/body-parts/redux/body-parts-slice'
 import { setUnauthorizedCallback } from './http'
 
 // `combineSlices` automatically combines the reducers using
 // their `reducerPath`s, therefore we no longer need to call `combineReducers`.
-export const rootReducer = combineSlices(counterSlice, customerSlice, agentSlice, prospectsSlice, authSlice)
+export const rootReducer = combineSlices(counterSlice, customerSlice, agentSlice, prospectsSlice, authSlice, musclesSlice, bodyPartsSlice)
 
 export type RootState = ReturnType<typeof rootReducer>
 
