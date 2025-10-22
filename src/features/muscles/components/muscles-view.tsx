@@ -13,18 +13,21 @@ import {
 import AddIcon from '@mui/icons-material/Add'
 import SearchIcon from '@mui/icons-material/Search'
 import { useDispatch, useSelector } from 'react-redux'
+import { useTranslation } from 'react-i18next'
 import { RootState } from '../../../app/store'
-import { fetchMuscles, deleteMuscle } from '../redux/muscles-thunks'
-import { openCreateModal, openEditModal, setFilters } from '../redux/muscles-slice'
+import { fetchMuscles, deleteMuscle, openCreateModal, openEditModal, setFilters } from '../redux/muscles-slice'
+import { fetchBodyParts } from '../../body-parts/redux/body-parts-slice'
 import { MusclesList } from './muscles-list'
 import { MuscleModal } from './muscle-modal'
-import { MuscleData } from '../types/muscle.types'
+import { Muscle } from '../types/muscle.types'
 
 export const MusclesView: React.FC = () => {
+  const { t } = useTranslation()
   const dispatch = useDispatch()
   const { muscles, status, error, filters, isModalOpen, modalMode, selectedMuscle } = useSelector(
     (state: RootState) => state.muscles
   )
+  const { bodyParts } = useSelector((state: RootState) => state.bodyParts)
 
   const [searchTerm, setSearchTerm] = useState('')
 
@@ -32,16 +35,23 @@ export const MusclesView: React.FC = () => {
     dispatch(fetchMuscles(filters) as any)
   }, [dispatch, filters])
 
+  useEffect(() => {
+    // Fetch body parts if not already loaded
+    if (bodyParts.length === 0) {
+      dispatch(fetchBodyParts() as any)
+    }
+  }, [dispatch, bodyParts.length])
+
   const handleCreateClick = () => {
     dispatch(openCreateModal())
   }
 
-  const handleEditClick = (muscle: MuscleData) => {
+  const handleEditClick = (muscle: Muscle) => {
     dispatch(openEditModal(muscle))
   }
 
-  const handleDeleteClick = async (muscle: MuscleData) => {
-    if (window.confirm('Are you sure you want to delete this muscle?')) {
+  const handleDeleteClick = async (muscle: Muscle) => {
+    if (window.confirm(t('muscles.deleteConfirm'))) {
       await dispatch(deleteMuscle(muscle as any) as any)
     }
   }
@@ -58,9 +68,13 @@ export const MusclesView: React.FC = () => {
     dispatch(setFilters({ bodyPart: searchTerm || undefined }))
   }
 
+  const handleFetchBodyParts = () => {
+    dispatch(fetchBodyParts() as any)
+  }
+
   const filteredMuscles = muscles.filter(muscle =>
-    muscle.muscle.spanish.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    muscle.muscle.english.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    muscle.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    muscle.nameEnglish.toLowerCase().includes(searchTerm.toLowerCase()) ||
     muscle.bodyPart.toLowerCase().includes(searchTerm.toLowerCase())
   )
 
@@ -68,7 +82,7 @@ export const MusclesView: React.FC = () => {
     <Box sx={{ p: 3 }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
         <Typography variant="h4" component="h1">
-          Muscles Management
+          {t('muscles.title')}
         </Typography>
         <Button
           variant="contained"
@@ -76,7 +90,7 @@ export const MusclesView: React.FC = () => {
           onClick={handleCreateClick}
           size="large"
         >
-          Add Muscle
+          {t('muscles.addMuscle')}
         </Button>
       </Box>
 
@@ -86,7 +100,7 @@ export const MusclesView: React.FC = () => {
             <Grid size={{ xs: 12, md: 8 }}>
               <TextField
                 fullWidth
-                placeholder="Search muscles by name or body part..."
+                placeholder={t('muscles.searchPlaceholder')}
                 value={searchTerm}
                 onChange={handleSearchChange}
                 onKeyPress={(e) => e.key === 'Enter' && handleSearchSubmit()}
@@ -102,7 +116,7 @@ export const MusclesView: React.FC = () => {
                 fullWidth
                 sx={{ height: '56px' }}
               >
-                Search
+                {t('common.search')}
               </Button>
             </Grid>
           </Grid>
@@ -124,8 +138,10 @@ export const MusclesView: React.FC = () => {
       {status === 'idle' && (
         <MusclesList
           muscles={filteredMuscles}
+          bodyParts={bodyParts}
           onEdit={handleEditClick}
           onDelete={handleDeleteClick}
+          onFetchBodyParts={handleFetchBodyParts}
         />
       )}
 

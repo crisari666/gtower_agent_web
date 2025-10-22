@@ -2,9 +2,7 @@ import { SignInRequest, SignInResponse, UnauthorizedResponse } from '../types/au
 import Api from '../../../app/http'
 
 export class AuthService {
-  urlBase = process.env.REACT_APP_API_URL
-  console.log({urlBase})
-  private api = new Api(urlBase)
+  private api = new Api(process.env.REACT_APP_API_URL)
 
   async signIn(credentials: SignInRequest): Promise<SignInResponse> {
     try {

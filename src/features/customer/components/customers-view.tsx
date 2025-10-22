@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { 
   Table, 
   TableBody, 
@@ -26,6 +27,7 @@ import { Customer } from '../types/customer.types'
 import CreateCustomerModal from './create-customer-modal'
 
 const CustomersView: React.FC = () => {
+  const { t } = useTranslation()
   const dispatch = useDispatch<AppDispatch>()
   const navigate = useNavigate()
   const { enqueueSnackbar } = useSnackbar()
@@ -48,9 +50,9 @@ const CustomersView: React.FC = () => {
   const handleCustomerNameClick = async (customerId: string): Promise<void> => {
     try {
       await navigator.clipboard.writeText(customerId)
-      enqueueSnackbar('Customer ID copied to clipboard', { variant: 'success' })
+      enqueueSnackbar(t('customers.customerIdCopied'), { variant: 'success' })
     } catch (err) {
-      enqueueSnackbar('Failed to copy customer ID', { variant: 'error' })
+      enqueueSnackbar(t('customers.failedToCopyCustomerId'), { variant: 'error' })
     }
   }
 
@@ -73,7 +75,7 @@ const CustomersView: React.FC = () => {
   return (
     <Box>
       <Typography variant="h4" component="h1" gutterBottom>
-        Customers
+        {t('customers.title')}
       </Typography>
       
       <Box mb={2}>
@@ -82,24 +84,24 @@ const CustomersView: React.FC = () => {
           startIcon={<AddIcon />}
           onClick={handleAddCustomer}
         >
-          Add Customer
+          {t('customers.addCustomer')}
         </Button>
       </Box>
       
       {customers.length === 0 ? (
         <Box mt={2}>
-          <Alert severity="info">No customers found.</Alert>
+          <Alert severity="info">{t('customers.noCustomersFound')}</Alert>
         </Box>
       ) : (
         <TableContainer component={Paper}>
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>Name</TableCell>
-                <TableCell>Phone</TableCell>
-                <TableCell>WhatsApp</TableCell>
-                <TableCell>Email</TableCell>
-                <TableCell align="center">Actions</TableCell>
+                <TableCell>{t('common.name')}</TableCell>
+                <TableCell>{t('common.phone')}</TableCell>
+                <TableCell>{t('common.whatsapp')}</TableCell>
+                <TableCell>{t('common.email')}</TableCell>
+                <TableCell align="center">{t('common.actions')}</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>

@@ -1,10 +1,13 @@
 import { NavLinkPersist } from '../../supports/Persistence'
 import { useDispatch, useSelector } from 'react-redux'
+import { useTranslation } from 'react-i18next'
 import { AppDispatch, RootState } from '../../app/store'
 import { signOut } from '../../features/auth/redux/auth-thunks'
+import LanguageSwitcher from '../LanguageSwitcher'
 import style from './nav.module.scss'
 
 export function Nav() {
+  const { t } = useTranslation()
   const dispatch = useDispatch<AppDispatch>()
   const { user, isLoading } = useSelector((state: RootState) => state.auth)
 
@@ -22,8 +25,10 @@ export function Nav() {
       <NavLinkPersist className={className} to='/page1'>Page 1</NavLinkPersist>
       <NavLinkPersist className={className} to='/page2'>Page 2</NavLinkPersist>
       <NavLinkPersist className={className} to='/page3'>Page 3</NavLinkPersist>
-      <NavLinkPersist className={className} to='/customer'>Customer</NavLinkPersist>
-      <NavLinkPersist className={className} to='/agent'>Agent</NavLinkPersist>
+      <NavLinkPersist className={className} to='/customer'>{t('navigation.customers')}</NavLinkPersist>
+      <NavLinkPersist className={className} to='/agent'>{t('navigation.agent')}</NavLinkPersist>
+      
+      <LanguageSwitcher />
       
       {user && (
         <div className={style['user-section']}>

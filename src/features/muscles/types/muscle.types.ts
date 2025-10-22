@@ -1,17 +1,16 @@
 export interface Muscle {
-  spanish: string
-  english: string
-}
-
-export interface MuscleData {
-  muscle: Muscle
+  _id: string
+  name: string
+  nameEnglish: string
   bodyPart: string
-  createdAt?: Date
-  updatedAt?: Date
+  __v: number
+  createdAt: string
+  updatedAt: string
 }
 
 export interface CreateMuscleRequest {
-  muscle: Muscle
+  name: string
+  nameEnglish: string
   bodyPart: string
 }
 
@@ -20,7 +19,8 @@ export interface CreateMultipleMusclesRequest {
 }
 
 export interface UpdateMuscleRequest {
-  muscle?: Muscle
+  name?: string
+  nameEnglish?: string
   bodyPart?: string
 }
 

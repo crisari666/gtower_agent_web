@@ -1,10 +1,10 @@
-import { MuscleData, CreateMuscleRequest, CreateMultipleMusclesRequest, UpdateMuscleRequest, MuscleFilters } from '../types/muscle.types'
+import { Muscle, CreateMuscleRequest, CreateMultipleMusclesRequest, UpdateMuscleRequest, MuscleFilters } from '../types/muscle.types'
 import Api from '../../../app/http'
 
 export class MusclesService {
   private static api = new Api(process.env.REACT_APP_BODYCORE_URL_MS)
 
-  static async getAllMuscles(filters?: MuscleFilters): Promise<MuscleData[]> {
+  static async getAllMuscles(filters?: MuscleFilters): Promise<Muscle[]> {
     try {
       const queryParams: any = {}
       if (filters?.bodyPart) {
@@ -20,7 +20,7 @@ export class MusclesService {
     }
   }
 
-  static async getMuscleById(id: string): Promise<MuscleData> {
+  static async getMuscleById(id: string): Promise<Muscle> {
     try {
       return await this.api.get({ 
         path: `/muscles/${id}` 
@@ -30,7 +30,7 @@ export class MusclesService {
     }
   }
 
-  static async createMuscle(data: CreateMuscleRequest): Promise<MuscleData> {
+  static async createMuscle(data: CreateMuscleRequest): Promise<Muscle> {
     try {
       return await this.api.post({ 
         path: '/muscles', 
@@ -41,7 +41,7 @@ export class MusclesService {
     }
   }
 
-  static async createMultipleMuscles(data: CreateMultipleMusclesRequest): Promise<MuscleData[]> {
+  static async createMultipleMuscles(data: CreateMultipleMusclesRequest): Promise<Muscle[]> {
     try {
       return await this.api.post({ 
         path: '/muscles/multiple', 
@@ -52,7 +52,7 @@ export class MusclesService {
     }
   }
 
-  static async updateMuscle(id: string, data: UpdateMuscleRequest): Promise<MuscleData> {
+  static async updateMuscle(id: string, data: UpdateMuscleRequest): Promise<Muscle> {
     try {
       return await this.api.patch({ 
         path: `/muscles/${id}`, 

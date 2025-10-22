@@ -76,6 +76,14 @@ src/
 ├── main.tsx
 └── index.html
 
+## 2.1 Page Component Structure (Example users list)
+- Every component hast own state (local or conneted to redux ), so we avoid to re rerender componentns
+<UserPage>
+  UserFilter
+  UserModal
+  UserList
+</UserPage>
+
 ## ⚙️ 3. Layer Responsibilities
 
 ### Pages

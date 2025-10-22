@@ -12,8 +12,9 @@ import {
   Switch,
 } from '@mui/material'
 import { useDispatch, useSelector } from 'react-redux'
+import { useTranslation } from 'react-i18next'
 import { RootState } from '../../../app/store'
-import { createBodyPart, updateBodyPart } from '../redux/body-parts-thunks'
+import { createBodyPart, updateBodyPart } from '../redux/body-parts-slice'
 import { BodyPart } from '../types/body-part.types'
 
 interface BodyPartModalProps {
@@ -24,6 +25,7 @@ interface BodyPartModalProps {
 }
 
 export const BodyPartModal: React.FC<BodyPartModalProps> = ({ open, mode, bodyPart, onClose }) => {
+  const { t } = useTranslation()
   const dispatch = useDispatch()
   const { status } = useSelector((state: RootState) => state.bodyParts)
   
@@ -100,26 +102,26 @@ export const BodyPartModal: React.FC<BodyPartModalProps> = ({ open, mode, bodyPa
   return (
     <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
       <DialogTitle>
-        {mode === 'create' ? 'Create New Body Part' : 'Edit Body Part'}
+        {mode === 'create' ? t('bodyParts.createTitle') : t('bodyParts.editTitle')}
       </DialogTitle>
       <DialogContent>
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, pt: 1 }}>
           <TextField
-            label="Spanish Name"
+            label={t('common.name')}
             value={formData.name}
             onChange={handleInputChange('name')}
             fullWidth
             required
           />
           <TextField
-            label="English Name"
+            label={t('bodyParts.nameEnglish')}
             value={formData.nameEnglish}
             onChange={handleInputChange('nameEnglish')}
             fullWidth
             required
           />
           <TextField
-            label="Description"
+            label={t('common.description')}
             value={formData.description}
             onChange={handleInputChange('description')}
             fullWidth
@@ -135,20 +137,20 @@ export const BodyPartModal: React.FC<BodyPartModalProps> = ({ open, mode, bodyPa
                 color="primary"
               />
             }
-            label="Active"
+            label={t('common.active')}
           />
         </Box>
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose} disabled={status === 'loading'}>
-          Cancel
+          {t('common.cancel')}
         </Button>
         <Button
           onClick={handleSubmit}
           variant="contained"
           disabled={status === 'loading' || !formData.name || !formData.nameEnglish || !formData.description}
         >
-          {status === 'loading' ? 'Saving...' : mode === 'create' ? 'Create' : 'Update'}
+          {status === 'loading' ? t('common.loading') : mode === 'create' ? t('common.create') : t('common.update')}
         </Button>
       </DialogActions>
     </Dialog>

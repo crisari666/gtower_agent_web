@@ -15,6 +15,7 @@ import {
 } from '@mui/material'
 import EditIcon from '@mui/icons-material/Edit'
 import DeleteIcon from '@mui/icons-material/Delete'
+import { useTranslation } from 'react-i18next'
 import { BodyPart } from '../types/body-part.types'
 
 interface BodyPartsListProps {
@@ -30,11 +31,12 @@ export const BodyPartsList: React.FC<BodyPartsListProps> = ({
   onDelete, 
   onToggleActive 
 }) => {
+  const { t } = useTranslation()
   if (bodyParts.length === 0) {
     return (
       <Box sx={{ textAlign: 'center', py: 4 }}>
         <Typography variant="h6" color="text.secondary">
-          No body parts found
+          {t('common.noDataFound')}
         </Typography>
       </Box>
     )
@@ -45,11 +47,11 @@ export const BodyPartsList: React.FC<BodyPartsListProps> = ({
       <Table>
         <TableHead>
           <TableRow>
-            <TableCell>Spanish Name</TableCell>
-            <TableCell>English Name</TableCell>
-            <TableCell>Description</TableCell>
-            <TableCell align="center">Status</TableCell>
-            <TableCell align="center">Actions</TableCell>
+            <TableCell>{t('common.name')}</TableCell>
+            <TableCell>{t('bodyParts.nameEnglish')}</TableCell>
+            <TableCell>{t('common.description')}</TableCell>
+            <TableCell align="center">{t('common.status')}</TableCell>
+            <TableCell align="center">{t('common.actions')}</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -72,7 +74,7 @@ export const BodyPartsList: React.FC<BodyPartsListProps> = ({
               </TableCell>
               <TableCell align="center">
                 <Chip
-                  label={bodyPart.isActive ? 'Active' : 'Inactive'}
+                  label={bodyPart.isActive ? t('common.active') : t('common.inactive')}
                   size="small"
                   color={bodyPart.isActive ? 'success' : 'default'}
                   variant={bodyPart.isActive ? 'filled' : 'outlined'}

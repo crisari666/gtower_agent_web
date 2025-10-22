@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Box, Paper, Typography, Divider, Chip } from '@mui/material'
 import { TrendingUp as TrendingUpIcon, CalendarToday as CalendarIcon } from '@mui/icons-material'
+import { useTranslation } from 'react-i18next'
 import ProspectsList from './prospects-list.component'
 import { Prospect } from '../types/prospects.types'
 
@@ -31,6 +32,7 @@ const formatConfidence = (confidence: number): string => {
 }
 
 const ProspectsView: React.FC = () => {
+  const { t } = useTranslation()
   const [selectedProspect, setSelectedProspect] = useState<Prospect | null>(null)
 
   const handleProspectSelect = (prospect: Prospect): void => {
@@ -67,26 +69,26 @@ const ProspectsView: React.FC = () => {
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                 <Box>
                   <Typography variant="h6" gutterBottom>
-                    Contact Information
+                    {t('prospects.contactInformation')}
                   </Typography>
                   <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
                     <Typography variant="body1">
-                      <strong>Customer ID:</strong> {selectedProspect.customerId}
+                      <strong>{t('prospects.customerId')}:</strong> {selectedProspect.customerId}
                     </Typography>
                     <Typography variant="body1">
-                      <strong>Phone:</strong> {selectedProspect.phone}
+                      <strong>{t('common.phone')}:</strong> {selectedProspect.phone}
                     </Typography>
                   </Box>
                 </Box>
 
                 <Box>
                   <Typography variant="h6" gutterBottom>
-                    Prospect Details
+                    {t('prospects.prospectDetails')}
                   </Typography>
                   <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                       <Typography variant="body1">
-                        <strong>Sentiment:</strong>
+                        <strong>{t('prospects.sentiment')}:</strong>
                       </Typography>
                       <Chip 
                         label={getSentimentLabel(selectedProspect.sentiment)} 
@@ -96,7 +98,7 @@ const ProspectsView: React.FC = () => {
                     </Box>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                       <Typography variant="body1">
-                        <strong>Confidence:</strong>
+                        <strong>{t('prospects.confidence')}:</strong>
                       </Typography>
                       <Chip 
                         label={formatConfidence(selectedProspect.confidence)}
@@ -106,19 +108,19 @@ const ProspectsView: React.FC = () => {
                       />
                     </Box>
                     <Typography variant="body1">
-                      <strong>Is Prospect:</strong> {selectedProspect.isProspect ? 'Yes' : 'No'}
+                      <strong>{t('prospects.isProspect')}:</strong> {selectedProspect.isProspect ? t('common.yes') : t('common.no')}
                     </Typography>
                   </Box>
                 </Box>
 
                 <Box>
                   <Typography variant="h6" gutterBottom>
-                    Timeline
+                    {t('prospects.timeline')}
                   </Typography>
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                     <CalendarIcon fontSize="small" color="action" />
                     <Typography variant="body1">
-                      <strong>Prospect Date:</strong> {formatDate(selectedProspect.prospectDate)}
+                      <strong>{t('prospects.prospectDate')}:</strong> {formatDate(selectedProspect.prospectDate)}
                     </Typography>
                   </Box>
                 </Box>
@@ -134,10 +136,10 @@ const ProspectsView: React.FC = () => {
             }}>
               <Box sx={{ textAlign: 'center', p: 4 }}>
                 <Typography variant="h4" component="h2" gutterBottom>
-                  Select a prospect
+                  {t('prospects.selectProspect')}
                 </Typography>
                 <Typography variant="body1" color="text.secondary">
-                  Choose a prospect from the list to view details
+                  {t('prospects.chooseProspectFromList')}
                 </Typography>
               </Box>
             </Paper>

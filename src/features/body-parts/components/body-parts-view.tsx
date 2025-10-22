@@ -17,14 +17,15 @@ import {
 import AddIcon from '@mui/icons-material/Add'
 import SearchIcon from '@mui/icons-material/Search'
 import { useDispatch, useSelector } from 'react-redux'
+import { useTranslation } from 'react-i18next'
 import { RootState } from '../../../app/store'
-import { fetchBodyParts, deleteBodyPart, updateBodyPart } from '../redux/body-parts-thunks'
-import { openCreateModal, openEditModal, setFilters } from '../redux/body-parts-slice'
+import { fetchBodyParts, deleteBodyPart, updateBodyPart, openCreateModal, openEditModal, setFilters } from '../redux/body-parts-slice'
 import { BodyPartsList } from './body-parts-list'
 import { BodyPartModal } from './body-part-modal'
 import { BodyPart } from '../types/body-part.types'
 
 export const BodyPartsView: React.FC = () => {
+  const { t } = useTranslation()
   const dispatch = useDispatch()
   const { bodyParts, status, error, filters, isModalOpen, modalMode, selectedBodyPart } = useSelector(
     (state: RootState) => state.bodyParts
@@ -46,7 +47,7 @@ export const BodyPartsView: React.FC = () => {
   }
 
   const handleDeleteClick = async (bodyPart: BodyPart) => {
-    if (window.confirm('Are you sure you want to delete this body part?')) {
+    if (window.confirm(t('bodyParts.deleteConfirm'))) {
       await dispatch(deleteBodyPart(bodyPart as any) as any)
     }
   }
@@ -91,7 +92,7 @@ export const BodyPartsView: React.FC = () => {
     <Box sx={{ p: 3 }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
         <Typography variant="h4" component="h1">
-          Body Parts Management
+          {t('bodyParts.title')}
         </Typography>
         <Button
           variant="contained"
@@ -99,7 +100,7 @@ export const BodyPartsView: React.FC = () => {
           onClick={handleCreateClick}
           size="large"
         >
-          Add Body Part
+          {t('bodyParts.addBodyPart')}
         </Button>
       </Box>
 
@@ -109,7 +110,7 @@ export const BodyPartsView: React.FC = () => {
             <Grid size={{ xs: 12, md: 4 }}>
               <TextField
                 fullWidth
-                placeholder="Search body parts..."
+                placeholder={t('bodyParts.searchPlaceholder')}
                 value={searchTerm}
                 onChange={handleSearchChange}
                 onKeyPress={(e) => e.key === 'Enter' && handleSearchSubmit()}
@@ -120,15 +121,15 @@ export const BodyPartsView: React.FC = () => {
             </Grid>
             <Grid size={{ xs: 12, md: 3 }}>
               <FormControl fullWidth>
-                <InputLabel>Status</InputLabel>
+                <InputLabel>{t('common.status')}</InputLabel>
                 <Select
                   value={statusFilter}
-                  label="Status"
+                  label={t('common.status')}
                   onChange={handleStatusFilterChange}
                 >
-                  <MenuItem value="all">All</MenuItem>
-                  <MenuItem value="active">Active</MenuItem>
-                  <MenuItem value="inactive">Inactive</MenuItem>
+                  <MenuItem value="all">{t('common.all')}</MenuItem>
+                  <MenuItem value="active">{t('common.active')}</MenuItem>
+                  <MenuItem value="inactive">{t('common.inactive')}</MenuItem>
                 </Select>
               </FormControl>
             </Grid>
@@ -139,7 +140,7 @@ export const BodyPartsView: React.FC = () => {
                 fullWidth
                 sx={{ height: '56px' }}
               >
-                Search
+                {t('common.search')}
               </Button>
             </Grid>
           </Grid>

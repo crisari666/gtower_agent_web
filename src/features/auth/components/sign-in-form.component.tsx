@@ -1,12 +1,14 @@
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { AppDispatch, RootState } from '../../../app/store'
 import { signIn } from '../redux/auth-thunks'
 import { SignInRequest } from '../types/auth.types'
 import styles from './sign-in-form.module.scss'
 
 export const SignInForm: React.FC = () => {
+  const { t } = useTranslation()
   const [formData, setFormData] = useState<SignInRequest>({
     identifier: '',
     password: '',
@@ -44,7 +46,7 @@ export const SignInForm: React.FC = () => {
     <div className={styles['sign-in-form']}>
       <form onSubmit={handleSubmit}>
         <div className={styles['form-group']}>
-          <label htmlFor="username">Username</label>
+          <label htmlFor="username">{t('auth.username')}</label>
           <input
             type="text"
             id="identifier"
@@ -57,7 +59,7 @@ export const SignInForm: React.FC = () => {
         </div>
         
         <div className={styles['form-group']}>
-          <label htmlFor="password">Password</label>
+          <label htmlFor="password">{t('auth.password')}</label>
           <input
             type="password"
             id="password"
@@ -80,7 +82,7 @@ export const SignInForm: React.FC = () => {
           disabled={isLoading}
           className={styles['submit-button']}
         >
-          {isLoading ? 'Signing In...' : 'Sign In'}
+          {isLoading ? t('auth.signingIn') : t('auth.signIn')}
         </button>
       </form>
     </div>

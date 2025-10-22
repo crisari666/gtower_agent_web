@@ -10,19 +10,20 @@ import {
   Typography,
 } from '@mui/material'
 import { useDispatch, useSelector } from 'react-redux'
+import { useTranslation } from 'react-i18next'
 import { RootState } from '../../../app/store'
-import { createMuscle, updateMuscle } from '../redux/muscles-thunks'
-import { closeModal } from '../redux/muscles-slice'
-import { MuscleData } from '../types/muscle.types'
+import { createMuscle, updateMuscle, closeModal } from '../redux/muscles-slice'
+import { Muscle } from '../types/muscle.types'
 
 interface MuscleModalProps {
   open: boolean
   mode: 'create' | 'edit'
-  muscle?: MuscleData | null
+  muscle?: Muscle | null
   onClose: () => void
 }
 
 export const MuscleModal: React.FC<MuscleModalProps> = ({ open, mode, muscle, onClose }) => {
+  const { t } = useTranslation()
   const dispatch = useDispatch()
   const { status } = useSelector((state: RootState) => state.muscles)
   
@@ -35,8 +36,8 @@ export const MuscleModal: React.FC<MuscleModalProps> = ({ open, mode, muscle, on
   useEffect(() => {
     if (mode === 'edit' && muscle) {
       setFormData({
-        spanish: muscle.muscle.spanish,
-        english: muscle.muscle.english,
+        spanish: muscle.name,
+        english: muscle.nameEnglish,
         bodyPart: muscle.bodyPart,
       })
     } else {
@@ -61,17 +62,15 @@ export const MuscleModal: React.FC<MuscleModalProps> = ({ open, mode, muscle, on
     }
 
     const muscleData = {
-      muscle: {
-        spanish: formData.spanish,
-        english: formData.english,
-      },
+      name: formData.spanish,
+      nameEnglish: formData.english,
       bodyPart: formData.bodyPart,
     }
 
     if (mode === 'create') {
       await dispatch(createMuscle(muscleData) as any)
     } else if (mode === 'edit' && muscle) {
-      await dispatch(updateMuscle({ id: muscle as any, data: muscleData }) as any)
+      await dispatch(updateMuscle({ id: muscle._id, data: muscleData }) as any)
     }
 
     onClose()
@@ -89,26 +88,26 @@ export const MuscleModal: React.FC<MuscleModalProps> = ({ open, mode, muscle, on
   return (
     <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
       <DialogTitle>
-        {mode === 'create' ? 'Create New Muscle' : 'Edit Muscle'}
+        {mode === 'create' ? t('muscles.createTitle') : t('muscles.editTitle')}
       </DialogTitle>
       <DialogContent>
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, pt: 1 }}>
           <TextField
-            label="Spanish Name"
+            label={t('common.name')}
             value={formData.spanish}
             onChange={handleInputChange('spanish')}
             fullWidth
             required
           />
           <TextField
-            label="English Name"
+            label={t('muscles.nameEnglish')}
             value={formData.english}
             onChange={handleInputChange('english')}
             fullWidth
             required
           />
           <TextField
-            label="Body Part"
+            label={t('muscles.bodyPart')}
             value={formData.bodyPart}
             onChange={handleInputChange('bodyPart')}
             fullWidth
@@ -118,14 +117,14 @@ export const MuscleModal: React.FC<MuscleModalProps> = ({ open, mode, muscle, on
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose} disabled={status === 'loading'}>
-          Cancel
+          {t('common.cancel')}
         </Button>
         <Button
           onClick={handleSubmit}
           variant="contained"
           disabled={status === 'loading' || !formData.spanish || !formData.english || !formData.bodyPart}
         >
-          {status === 'loading' ? 'Saving...' : mode === 'create' ? 'Create' : 'Update'}
+          {status === 'loading' ? t('common.loading') : mode === 'create' ? t('common.create') : t('common.update')}
         </Button>
       </DialogActions>
     </Dialog>

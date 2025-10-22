@@ -15,7 +15,7 @@ export default class Api {
   constructor(baseURL?: string) {
     // Use provided base URL or fallback to environment variable
     const urlApi = baseURL || 'noSettedBaseURL'
-    console.log({urlApi})
+  
     this.apiAxios = axios.create({
       baseURL: urlApi,
       headers: {

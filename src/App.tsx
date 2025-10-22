@@ -7,6 +7,7 @@ import { AppDispatch } from './app/store'
 import { checkAuthStatus } from './features/auth/redux/auth-thunks'
 import { router } from './app/router'
 import { ThemeProvider } from './app/theme'
+import './i18n'
 
 function App() {
   const dispatch = useDispatch<AppDispatch>()
